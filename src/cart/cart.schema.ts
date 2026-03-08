@@ -16,3 +16,6 @@ export class Cart {
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
+
+// Index duy nhất: 1 user chỉ có 1 dòng cho mỗi product
+CartSchema.index({ userId: 1, productId: 1 }, { unique: true });

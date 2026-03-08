@@ -1,6 +1,7 @@
-import { Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Get, UseGuards, Param } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from '../auth/decorators/user.decorator';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('orders')
@@ -8,12 +9,17 @@ export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post()
-  createOrder(@Request() req) {
-    return this.orderService.createOrder(req.user.userId);
+  createOrder(@User('userId') userId: string) {
+    return this.orderService.createOrder(userId);
   }
 
   @Get()
-  getOrders(@Request() req) {
-    return this.orderService.getOrderHistory(req.user.userId);
+  getOrderHistory(@User('userId') userId: string) {
+    return this.orderService.getOrderHistory(userId);
+  }
+
+  @Get(':id')
+  getOrderById(@Param('id') orderId: string) {
+    return this.orderService.getOrderById(orderId);
   }
 }
